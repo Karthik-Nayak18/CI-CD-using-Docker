@@ -25,26 +25,37 @@ pipeline {
            steps {
               
                 sh 'docker build -t samplewebapp:latest .' 
-                sh 'docker tag samplewebapp karthik/samplewebapp:latest'
-                //sh 'docker tag samplewebapp karthik/samplewebapp:$BUILD_NUMBER'
+                sh 'docker tag samplewebapp:latest 141325/samplewebapp:latest'
+                //sh 'docker tag samplewebapp 141325/samplewebapp:$BUILD_NUMBER'
                
           }
         }
      
      
-      stage('Run Docker container on Jenkins Agent') {
+    stage('Run Docker container on Jenkins Agent') {
              
             steps 
 			{
-                sh "docker run -d -p 8003:8080 karthik/samplewebapp"
+                sh "docker run -d -p 8003:8080 141325/samplewebapp:latest"
  
             }
         }
+	 
+stage('Publish image to Docker Hub') {
+          
+            steps {
+        withDockerRegistry([ credentialsId: "dockerHub", url: "https://hub.docker.com/repository/docker/141325/samplewebapp" ]) {
+          sh  'docker push 141325/samplewebapp:latest'
+        //  sh  'docker push 141325/samplewebapp:$BUILD_NUMBER' 
+        }
+                  
+          }
+        }
+	 
  stage('Run Docker container on remote hosts') {
              
             steps {
-		sh "docker pull karthik/samplewebapp:latest"
-                sh "docker -H ssh://ec2-user@65.0.45.247 run -d -p 8003:8080 karthik/samplewebapp"
+                sh "docker -H ssh://ec2-user@65.0.45.247 run -d -p 8003:8080 141325/samplewebapp:latest"
  
             }
         }

@@ -31,6 +31,17 @@ pipeline {
                
           }
         }
+	 
+	stage('Publish image to Docker Hub') {
+          
+            steps {
+        withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
+          sh  'docker push 141325/samplewebapp:latest'
+        //  sh  'docker push 141325/samplewebapp:$BUILD_NUMBER' 
+        }
+                  
+          }
+        }
      
      
     stage('Run Docker container on Jenkins Agent') {
@@ -42,16 +53,7 @@ pipeline {
             }
         }
 	 
-stage('Publish image to Docker Hub') {
-          
-            steps {
-        withDockerRegistry([ credentialsId: "dockerHub", url: "https://hub.docker.com" ]) {
-          sh  'docker push 141325/samplewebapp:latest'
-        //  sh  'docker push 141325/samplewebapp:$BUILD_NUMBER' 
-        }
-                  
-          }
-        }
+
 	 
  stage('Run Docker container on remote hosts') {
              

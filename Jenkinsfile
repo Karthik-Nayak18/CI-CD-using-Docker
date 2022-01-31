@@ -36,11 +36,9 @@ pipeline {
           
             steps {
        // withDockerRegistry([ credentialsId: "dockerHub", url: "https://hub.docker.com/repository/docker/141325/samplewebapp" ]) 
-	{
 	sh 'docker login --username 141325 --password Trust@nayak18'
           sh  'docker push 141325/samplewebapp:latest'
-        //  sh  'docker push 141325/samplewebapp:$BUILD_NUMBER' 
-        }
+        //  sh  'docker push 141325/samplewebapp:$BUILD_NUMBER'
                   
           }
         }
